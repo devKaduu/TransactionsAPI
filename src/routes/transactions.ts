@@ -3,7 +3,6 @@ import { FastifyInstance } from "fastify";
 import { z } from "zod";
 import { prisma } from "../database/prismaClient";
 import { randomUUID } from "crypto";
-import { error } from "console";
 import { checkSessionIdExists } from "../middlewares/check-session-id-exists";
 
 export async function transactionsRoutes(app: FastifyInstance) {
@@ -24,10 +23,9 @@ export async function transactionsRoutes(app: FastifyInstance) {
   app.get("/summary", { preHandler: [checkSessionIdExists] }, async (request) => {
     const { sessionId } = request.cookies;
 
-
     const summary = await prisma.transactions.aggregate({
       where: {
-        sessionId: sessionId
+        sessionId: sessionId,
       },
       _sum: {
         amount: true,
