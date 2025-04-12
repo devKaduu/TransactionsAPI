@@ -1,5 +1,5 @@
 import fastify from "fastify";
-import { transactionsRoutes } from "./routes/transactions";
+import { transactionsRoutes } from "./modules/transactions/transactions";
 import cookie from "@fastify/cookie";
 
 const app = fastify();

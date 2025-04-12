@@ -1,11 +1,11 @@
 import { FastifyInstance } from "fastify";
 
 import { z } from "zod";
-import { prisma } from "../database/prismaClient";
-import { checkSessionIdExists } from "../middlewares/check-session-id-exists";
+import { prisma } from "../../database/prismaClient";
+import { checkSessionIdExists } from "../../shared/middlewares/check-session-id-exists";
 
-import { TransactionRepository } from "../repositories/transaction-repository";
-import { createSessionId } from "../middlewares/create-session-id";
+import { TransactionRepository } from "./repositories/transaction-repository";
+import { createSessionId } from "../../shared/middlewares/create-session-id";
 
 const transactionRepository = new TransactionRepository(prisma);
 
