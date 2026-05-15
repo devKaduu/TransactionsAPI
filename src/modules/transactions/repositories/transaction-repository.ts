@@ -9,4 +9,23 @@ export class TransactionRepository {
       data: transaction,
     });
   }
+
+  async listBySessionId(sessionId: string) {
+    return this.prisma.transactions.findMany({
+      where: { sessionId },
+    });
+  }
+
+  async findById(id: string, sessionId: string) {
+    return this.prisma.transactions.findFirst({
+      where: { id, sessionId },
+    });
+  }
+
+  async getSummaryBySessionId(sessionId: string) {
+    return this.prisma.transactions.aggregate({
+      where: { sessionId },
+      _sum: { amount: true },
+    });
+  }
 }

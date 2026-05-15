@@ -1,14 +1,14 @@
-import { fastify } from "fastify";
-import { transactionsRoutes } from "./modules/transactions/transactions";
 import cookie from "@fastify/cookie";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
+import { fastify } from "fastify";
+import { transactionsRoutes } from "./modules/transactions/routes/transactions.routes";
 
-import {
-  jsonSchemaTransform,
-  serializerCompiler,
-  validatorCompiler,
-} from "fastify-type-provider-zod";
+import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
+
+import { prisma } from "./database/prismaClient";
+import { TransactionRepository } from "./modules/transactions/repositories/transaction-repository";
+import { TransactionService } from "./modules/transactions/services/transaction-service";
 
 export const app = fastify();
 
@@ -33,4 +33,11 @@ app.register(fastifySwaggerUi, {
 
 app.register(cookie);
 
-app.register(transactionsRoutes, { prefix: "transactions" });
+// Injeção de dependências: composition root
+const transactionRepository = new TransactionRepository(prisma);
+const transactionService = new TransactionService(transactionRepository);
+
+app.register(transactionsRoutes, {
+  prefix: "transactions",
+  transactionService,
+});
